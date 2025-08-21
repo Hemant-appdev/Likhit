@@ -18,6 +18,7 @@ import com.hbworld.likhit.view.editView.EditViewModel
 import com.hbworld.likhit.view.editView.EditScreen
 import com.hbworld.likhit.view.detailView.DetailScreen
 import com.hbworld.likhit.view.homeView.HomeScreen
+import com.hbworld.likhit.view.homeView.HomeViewModel
 
 @Composable
 @Preview
@@ -43,7 +44,9 @@ fun LikhitView() {
 
 private fun NavGraphBuilder.homeScreenRoute(navController: NavHostController) {
     composable(LikhitRoute.HOME_SCREEN) {
+        val viewModel = hiltViewModel<HomeViewModel>()
         HomeScreen(
+            viewModel = viewModel,
             onNoteClick = { navController.navigate(LikhitRoute.DETAIL_SCREEN) },
             onAddClick = { navController.navigate(LikhitRoute.ADD_SCREEN) }
         )

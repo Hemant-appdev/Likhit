@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 interface NotesRepositoryContract {
     suspend fun addNote(note: Note): Long
-    suspend fun getAllNotes(): Flow<List<Note>>
+    fun getAllNotes(): Flow<List<Note>>
 }
 
 
@@ -18,7 +18,7 @@ class NotesRepository @Inject constructor(
         return noteDao.insert(note)
     }
 
-    override suspend fun getAllNotes(): Flow<List<Note>> {
+    override fun getAllNotes(): Flow<List<Note>> {
         return noteDao.getAll()
     }
 
