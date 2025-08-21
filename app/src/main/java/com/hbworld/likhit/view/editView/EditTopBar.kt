@@ -31,7 +31,7 @@ fun EditTopBar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = {}) {
+            IconButton(onClick = onBackClick) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back Button"
@@ -39,13 +39,13 @@ fun EditTopBar(
             }
         },
         actions = {
-            IconButton(onClick = {}) {
+            IconButton(onClick = saveClick) {
                 Icon(
                     imageVector = Icons.Filled.Save,
                     contentDescription = "Save Note"
                 )
             }
-            IconButton(onClick = {}) {
+            IconButton(onClick = moreClick) {
                 Icon(
                     imageVector = Icons.Filled.MoreVert,
                     contentDescription = "More Option"

@@ -1,11 +1,13 @@
 package com.hbworld.likhit.view.editView
 
+import androidx.lifecycle.viewModelScope
 import com.hbworld.likhit.base.BaseViewModel
 import com.hbworld.likhit.domain.usecase.AddNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +43,14 @@ class EditViewModel @Inject constructor(
     }
 
     private fun handleOnSaveClick() {
-
+        viewModelScope.launch {
+            try {
+                val id = addNoteUseCase.saveNote(state.value.title, state.value.description)
+                println("save success with id -> $id")
+            } catch (e: Exception) {
+                println(e.message)
+            }
+        }
     }
 
     private fun handleOnBackClick() {

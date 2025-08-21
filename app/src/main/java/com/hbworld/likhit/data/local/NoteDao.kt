@@ -1,14 +1,17 @@
 package com.hbworld.likhit.data.local
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao{
 
-    suspend fun insert(note: Note): Int
+    @Insert
+    suspend fun insert(note: Note): Long
 
     @Query("SELECT * FROM Note")
-    suspend fun getAll(): Flow<List<Note>>
+    fun getAll(): Flow<List<Note>>
 }
