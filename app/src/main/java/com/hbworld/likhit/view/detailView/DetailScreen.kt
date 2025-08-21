@@ -1,4 +1,4 @@
-package com.hbworld.likhit.view
+package com.hbworld.likhit.view.detailView
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
