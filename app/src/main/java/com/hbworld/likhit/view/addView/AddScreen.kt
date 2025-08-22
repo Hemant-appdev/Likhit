@@ -1,4 +1,4 @@
-package com.hbworld.likhit.view.editView
+package com.hbworld.likhit.view.addView
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,21 +17,21 @@ import com.hbworld.likhit.component.CenteredTransparentTextField
 import com.hbworld.likhit.ui.theme.Pink80
 
 @Composable
-fun EditScreen(
-    viewModel: EditViewModel,
+fun AddScreen(
+    viewModel: AddViewModel,
     moreClick: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     EditAdd(
-        onBackClick = { viewModel.onViewEvent(EditScreenUIEvent.OnBackClick) },
-        saveClick = { viewModel.onViewEvent(EditScreenUIEvent.OnSaveClick) },
+        onBackClick = { viewModel.onViewEvent(AddScreenUiEvent.OnBackClick) },
+        saveClick = { viewModel.onViewEvent(AddScreenUiEvent.OnSaveClick) },
         moreClick = moreClick,
         title = state.title,
         description = state.description,
-        onTitleChange = { viewModel.onViewEvent(EditScreenUIEvent.OnTitleChange(title = it)) },
+        onTitleChange = { viewModel.onViewEvent(AddScreenUiEvent.OnTitleChange(title = it)) },
         onDescriptionChange = {
             viewModel.onViewEvent(
-                EditScreenUIEvent.OnDescriptionChange(
+                AddScreenUiEvent.OnDescriptionChange(
                     description = it
                 )
             )

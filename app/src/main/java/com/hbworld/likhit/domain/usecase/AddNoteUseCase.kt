@@ -1,13 +1,13 @@
 package com.hbworld.likhit.domain.usecase
 
 import com.hbworld.likhit.data.local.Note
-import com.hbworld.likhit.data.repository.NotesRepository
+import com.hbworld.likhit.data.repository.NoteRepository
 import javax.inject.Inject
 
 class AddNoteUseCase @Inject constructor(
-    private val repository: NotesRepository
+    private val repository: NoteRepository
 ) {
-    internal suspend fun saveNote(title: String, description: String): Long {
+    internal suspend fun addNote(title: String, description: String): Long {
         return repository.addNote(
             Note(
                 title = title,

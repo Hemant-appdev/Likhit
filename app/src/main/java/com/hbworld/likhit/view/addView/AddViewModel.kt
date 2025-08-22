@@ -1,4 +1,4 @@
-package com.hbworld.likhit.view.editView
+package com.hbworld.likhit.view.addView
 
 import androidx.lifecycle.viewModelScope
 import com.hbworld.likhit.base.BaseViewModel
@@ -6,27 +6,25 @@ import com.hbworld.likhit.domain.usecase.AddNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EditViewModel @Inject constructor(
+class AddViewModel @Inject constructor(
     val addNoteUseCase: AddNoteUseCase
-) : BaseViewModel<EditScreenUIState, EditScreenUIEvent>() {
+) : BaseViewModel<AddScreenUiState, AddScreenUiEvent>() {
 
-    private val _state: MutableStateFlow<EditScreenUIState.State> =
-        MutableStateFlow(EditScreenUIState.State.initialState())
+    private val _state = MutableStateFlow(AddScreenUiState.State.initialState())
+    val state: StateFlow<AddScreenUiState.State> =  _state.asStateFlow()
 
-    val state: StateFlow<EditScreenUIState.State>
-        get() = _state
-
-    fun onViewEvent(event: EditScreenUIEvent) {
+    fun onViewEvent(event: AddScreenUiEvent) {
         when (event) {
-            EditScreenUIEvent.OnBackClick -> handleOnBackClick()
-            is EditScreenUIEvent.OnSaveClick -> handleOnSaveClick()
-            is EditScreenUIEvent.OnDescriptionChange -> handleOnDescriptionChange(event.description)
-            is EditScreenUIEvent.OnTitleChange -> handleOnTitleChange(event.title)
+            AddScreenUiEvent.OnBackClick -> handleOnBackClick()
+            is AddScreenUiEvent.OnSaveClick -> handleOnSaveClick()
+            is AddScreenUiEvent.OnDescriptionChange -> handleOnDescriptionChange(event.description)
+            is AddScreenUiEvent.OnTitleChange -> handleOnTitleChange(event.title)
         }
     }
 
@@ -45,7 +43,7 @@ class EditViewModel @Inject constructor(
     private fun handleOnSaveClick() {
         viewModelScope.launch {
             try {
-                val id = addNoteUseCase.saveNote(state.value.title, state.value.description)
+                val id = addNoteUseCase.addNote(state.value.title, state.value.description)
                 println("save success with id -> $id")
             } catch (e: Exception) {
                 println(e.message)

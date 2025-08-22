@@ -5,10 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-@Preview
-fun DetailScreen() {
+fun DetailScreen(viewModel: DetailScreenViewModel, noteId: Long) {
 
-    Text(text = "Hello From Detail Screen")
+    Text(text = "Hello From Detail Screen with id -> $noteId")
 
 
 }

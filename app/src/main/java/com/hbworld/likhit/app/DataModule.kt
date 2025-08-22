@@ -1,13 +1,11 @@
 package com.hbworld.likhit.app
 
 import com.hbworld.likhit.data.local.NoteDao
-import com.hbworld.likhit.data.repository.NotesRepository
-import com.hbworld.likhit.data.repository.NotesRepositoryContract
-import dagger.Binds
+import com.hbworld.likhit.data.repository.NoteRepository
+import com.hbworld.likhit.data.repository.NoteRepositoryContract
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -17,7 +15,7 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun providesNotesRepository(noteDao: NoteDao): NotesRepositoryContract {
-        return NotesRepository(noteDao)
+    fun providesNotesRepository(noteDao: NoteDao): NoteRepositoryContract {
+        return NoteRepository(noteDao)
     }
 }
