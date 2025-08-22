@@ -1,5 +1,6 @@
 package com.hbworld.likhit.view.addView
 
+import com.hbworld.likhit.base.UIEffect
 import com.hbworld.likhit.base.UIEvent
 import com.hbworld.likhit.base.UIState
 
@@ -11,12 +12,15 @@ sealed class AddScreenUiEvent() : UIEvent {
 }
 
 sealed class AddScreenUiState() : UIState {
-    object Success : AddScreenUiState()
-    object Error : AddScreenUiState()
-    object Loading : AddScreenUiState()
-    data class State(val title: String, val description: String) : AddScreenUiState() {
+    data class State(val title: String, val description: String, val isLoading: Boolean) : AddScreenUiState() {
         companion object {
-            fun initialState() = State(title = "", description = "")
+            fun initialState() = State(title = "", description = "", isLoading = false)
         }
     }
+}
+
+sealed class AddScreenUiEffect() : UIEffect {
+    object NavigateBack : AddScreenUiEffect()
+    data class ShowToast(val message: String) : AddScreenUiEffect()
+    data class ShowToastAndNavigateBack(val message: String) : AddScreenUiEffect()
 }

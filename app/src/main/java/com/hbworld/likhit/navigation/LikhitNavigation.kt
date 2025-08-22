@@ -58,7 +58,8 @@ private fun NavGraphBuilder.addScreenRoute(navController: NavHostController) {
     composable(LikhitRoute.AddScreen.route) {
         val viewModel = hiltViewModel<AddViewModel>()
         AddScreen(
-            viewModel = viewModel
-        ) {}
+            viewModel = viewModel,
+            navigateBack = { navController.navigate(LikhitRoute.HomeScreen.route) }
+        )
     }
 }
