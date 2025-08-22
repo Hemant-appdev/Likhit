@@ -1,4 +1,4 @@
-package com.hbworld.likhit.view.editView
+package com.hbworld.likhit.view.addView
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons

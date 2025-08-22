@@ -6,7 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.hbworld.likhit.view.LikhitView
+import com.hbworld.likhit.navigation.LikhitNavigation
+import com.hbworld.likhit.ui.theme.LikhitTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,13 +16,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            LikhitView()
+            MyAppView()
         }
     }
 }
 
 @Composable
+fun MyAppView() {
+    LikhitTheme {
+        LikhitNavigation()
+    }
+
+}
+
+@Composable
 @Preview()
 fun LikhitPreview() {
-    LikhitView()
+    MyAppView()
 }

@@ -2,7 +2,6 @@ package com.hbworld.likhit.app
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.hbworld.likhit.data.local.NoteDao
 import com.hbworld.likhit.data.local.NoteDatabase
 import dagger.Module

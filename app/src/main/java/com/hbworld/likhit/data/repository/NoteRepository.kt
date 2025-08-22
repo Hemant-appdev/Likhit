@@ -5,22 +5,25 @@ import com.hbworld.likhit.data.local.NoteDao
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-interface NotesRepositoryContract {
+interface NoteRepositoryContract {
     suspend fun addNote(note: Note): Long
-    suspend fun getAllNotes(): Flow<List<Note>>
+    fun getAllNotes(): Flow<List<Note>>
+    suspend fun getNoteById(noteId: Long): Note
 }
 
 
-class NotesRepository @Inject constructor(
+class NoteRepository @Inject constructor(
     private val noteDao: NoteDao
-) : NotesRepositoryContract {
+) : NoteRepositoryContract {
     override suspend fun addNote(note: Note): Long {
         return noteDao.insert(note)
     }
 
-    override suspend fun getAllNotes(): Flow<List<Note>> {
+    override fun getAllNotes(): Flow<List<Note>> {
         return noteDao.getAll()
     }
 
-
+    override suspend fun getNoteById(noteId: Long): Note {
+        return noteDao.getNoteById(noteId)
+    }
 }
