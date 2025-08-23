@@ -2,6 +2,8 @@ package com.hbworld.likhit.view.detailView
 
 import androidx.lifecycle.viewModelScope
 import com.hbworld.likhit.base.BaseViewModel
+import com.hbworld.likhit.data.local.Note
+import com.hbworld.likhit.domain.base.Result
 import com.hbworld.likhit.domain.usecase.GetNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,11 +26,15 @@ class DetailScreenViewModel @Inject constructor(
 
     private fun handleOnFirstComposition(noteId: Long) {
         viewModelScope.launch {
-            try {
-                val note = getNoteUseCase.getNoteById(noteId)
-                setState { DetailScreenUiState.Success(note.title, note.description) }
-            } catch (e: Exception) {
-                setState { DetailScreenUiState.Error(e.message ?: "Unknown error") }
+            val result = getNoteUseCase(params = GetNoteUseCase.Param(noteId))
+            when (result) {
+                is Result.Error -> {
+                    setState { DetailScreenUiState.Error(result.exception.message.toString()) }
+                }
+
+                is Result.Success<Note> -> {
+                    setState { DetailScreenUiState.Success(result.data.title, result.data.description) }
+                }
             }
         }
     }

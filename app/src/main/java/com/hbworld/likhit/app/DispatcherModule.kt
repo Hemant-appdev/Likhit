@@ -1,6 +1,5 @@
 package com.hbworld.likhit.app
 
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,8 +22,10 @@ annotation class IODispatcher
 object DispatcherModule {
 
     @Provides
+    @DefaultDispatcher
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
     @Provides
+    @IODispatcher
     fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 }

@@ -1,19 +1,25 @@
 package com.hbworld.likhit.domain.usecase
 
-import com.hbworld.likhit.data.local.Note
+import com.hbworld.likhit.app.IODispatcher
 import com.hbworld.likhit.data.repository.NoteRepository
+import com.hbworld.likhit.domain.base.BaseCoroutineUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
 class AddNoteUseCase @Inject constructor(
+    @IODispatcher private val coroutineDispatcher: CoroutineDispatcher,
     private val repository: NoteRepository
-) {
-    internal suspend fun addNote(title: String, description: String): Long {
+) : BaseCoroutineUseCase<AddNoteUseCase.Param, Long>(coroutineDispatcher) {
+
+    override suspend fun execute(params: Param): Long {
         return repository.addNote(
-            Note(
-                title = title,
-                description = description,
-                updatedAt = System.currentTimeMillis()
-            )
+            title = params.title,
+            description = params.description
         )
     }
+
+    data class Param(
+        val title: String,
+        val description: String
+    )
 }

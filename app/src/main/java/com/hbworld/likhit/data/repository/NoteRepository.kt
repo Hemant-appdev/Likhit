@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 interface NoteRepositoryContract {
-    suspend fun addNote(note: Note): Long
+    suspend fun addNote(title: String, description: String): Long
     fun getAllNotes(): Flow<List<Note>>
     suspend fun getNoteById(noteId: Long): Note
 }
@@ -15,8 +15,14 @@ interface NoteRepositoryContract {
 class NoteRepository @Inject constructor(
     private val noteDao: NoteDao
 ) : NoteRepositoryContract {
-    override suspend fun addNote(note: Note): Long {
-        return noteDao.insert(note)
+    override suspend fun addNote(title: String, description: String): Long {
+        return noteDao.insert(
+            Note(
+                title = title,
+                description = description,
+                updatedAt = System.currentTimeMillis()
+            )
+        )
     }
 
     override fun getAllNotes(): Flow<List<Note>> {

@@ -1,16 +1,21 @@
 package com.hbworld.likhit.domain.usecase
 
+import com.hbworld.likhit.app.IODispatcher
 import com.hbworld.likhit.data.local.Note
 import com.hbworld.likhit.data.repository.NoteRepository
+import com.hbworld.likhit.domain.base.BaseCoroutineUseCase
+import com.hbworld.likhit.domain.base.Result
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
 class GetNoteUseCase @Inject constructor(
+    @IODispatcher private val coroutineDispatcher: CoroutineDispatcher,
     private val noteRepository: NoteRepository
-) {
+) : BaseCoroutineUseCase<GetNoteUseCase.Param, Note>(coroutineDispatcher) {
 
-    suspend fun getNoteById(noteId: Long): Note {
-        return noteRepository.getNoteById(noteId)
+    override suspend fun execute(params: Param): Note {
+        return noteRepository.getNoteById(params.id)
     }
 
-
+    data class Param(val id: Long)
 }

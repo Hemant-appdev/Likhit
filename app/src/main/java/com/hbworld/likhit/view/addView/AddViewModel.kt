@@ -3,7 +3,9 @@ package com.hbworld.likhit.view.addView
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.hbworld.likhit.base.BaseViewModel
+import com.hbworld.likhit.data.local.Note
 import com.hbworld.likhit.domain.usecase.AddNoteUseCase
+import com.hbworld.likhit.domain.base.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,16 +41,25 @@ class AddViewModel @Inject constructor(
 
         viewModelScope.launch {
             setState { copy(isLoading = true) }
-            try {
-                val id = addNoteUseCase.addNote(uiState.value.title, uiState.value.description)
-                setEffect { AddScreenUiEffect.ShowToastAndNavigateBack("Note saved successfully!") }
-                Log.d("AddViewModel", "save success with id -> $id")
-            } catch (e: Exception) {
-                setEffect { AddScreenUiEffect.ShowToast("Couldn't save the note") }
-                Log.e("AddViewModel", "error while saving note -> ${e.message}")
-            } finally {
-                setState { copy(isLoading = false) }
+            val result = addNoteUseCase(
+                retryCount = 2,
+                params = AddNoteUseCase.Param(
+                    title = uiState.value.title,
+                    description = uiState.value.description
+                )
+            )
+            when (result) {
+                is Result.Success<Long> -> {
+                    setEffect { AddScreenUiEffect.ShowToastAndNavigateBack("Note saved successfully!") }
+                    Log.d("AddViewModel", "save success with id ->${result.data}")
+                }
+
+                is Result.Error -> {
+                    setEffect { AddScreenUiEffect.ShowToast("Couldn't save the note") }
+                    Log.e("AddViewModel", "error while saving note -> ${result.exception}")
+                }
             }
+            setState { copy(isLoading = false) }
         }
     }
 
