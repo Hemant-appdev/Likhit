@@ -1,15 +1,21 @@
 package com.hbworld.likhit.domain.usecase
 
-import com.hbworld.likhit.data.local.Note
-import com.hbworld.likhit.data.repository.NoteRepository
+import com.hbworld.likhit.di.IODispatcher
+import com.hbworld.likhit.data.local.NoteEntity
+import com.hbworld.likhit.data.repository.NoteRepositoryContract
+import com.hbworld.likhit.domain.common.FlowUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetAllNotesUseCase @Inject constructor(
-    private val repository: NoteRepository
-) {
+    @IODispatcher private val coroutineDispatcher: CoroutineDispatcher,
+    private val repository: NoteRepositoryContract
+) : FlowUseCase<Unit, List<NoteEntity>>(coroutineDispatcher) {
 
-    fun getAllNotes(): Flow<List<Note>> {
+    override fun execute(param: Unit): Flow<List<NoteEntity>> {
         return repository.getAllNotes()
     }
+
+
 }
