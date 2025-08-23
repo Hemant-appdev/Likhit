@@ -5,14 +5,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlin.repeat
 
-abstract class BaseCoroutineUseCase<in P, out R>(
+/**
+ * 
+ */
+abstract class CoroutineUseCase<in P, out R>(
     private val coroutineDispatcher: CoroutineDispatcher
-) {
+) : SuspendUseCase<P, R> {
 
-    suspend operator fun invoke(
+    override suspend operator fun invoke(
         params: P,
-        retryCount: Int = 0,
-        initialDelayMillis: Long = 0L
+        retryCount: Int,
+        initialDelayMillis: Long
     ): Result<R> {
         return withContext(coroutineDispatcher) {
             var currentDelay = initialDelayMillis

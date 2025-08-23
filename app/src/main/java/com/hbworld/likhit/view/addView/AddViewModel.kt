@@ -1,13 +1,9 @@
 package com.hbworld.likhit.view.addView
 
 import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.hbworld.likhit.base.BaseViewModel
-import com.hbworld.likhit.data.local.Note
 import com.hbworld.likhit.domain.usecase.AddNoteUseCase
-import com.hbworld.likhit.domain.base.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +23,6 @@ class AddViewModel @Inject constructor(
     }
 
     private fun handleOnTitleChange(title: String) {
-        // 4. Use the `setState` helper for cleaner updates
         setState { copy(title = title) }
     }
 
@@ -39,28 +34,24 @@ class AddViewModel @Inject constructor(
         if (uiState.value.isLoading == true) return
         if (uiState.value.title.isBlank() || uiState.value.description.isBlank()) return
 
-        viewModelScope.launch {
-            setState { copy(isLoading = true) }
-            val result = addNoteUseCase(
-                retryCount = 2,
-                params = AddNoteUseCase.Param(
-                    title = uiState.value.title,
-                    description = uiState.value.description
-                )
-            )
-            when (result) {
-                is Result.Success<Long> -> {
-                    setEffect { AddScreenUiEffect.ShowToastAndNavigateBack("Note saved successfully!") }
-                    Log.d("AddViewModel", "save success with id ->${result.data}")
-                }
-
-                is Result.Error -> {
-                    setEffect { AddScreenUiEffect.ShowToast("Couldn't save the note") }
-                    Log.e("AddViewModel", "error while saving note -> ${result.exception}")
-                }
+        executeSuspendUseCase(
+            useCase = addNoteUseCase,
+            param = AddNoteUseCase.Param(
+                title = uiState.value.title,
+                description = uiState.value.description
+            ),
+            onLoading = { setState { copy(isLoading = true) } },
+            onError = { e ->
+                setState { copy(isLoading = false) }
+                setEffect { AddScreenUiEffect.ShowToast("Couldn't save the note") }
+                Log.e("AddViewModel", "error while saving note -> ${e.message}")
+            },
+            onSuccess = { data ->
+                setState { copy(isLoading = false) }
+                setEffect { AddScreenUiEffect.ShowToastAndNavigateBack("Note saved successfully!") }
+                Log.d("AddViewModel", "save success with id ->${data}")
             }
-            setState { copy(isLoading = false) }
-        }
+        )
     }
 
     private fun handleOnBackClick() {
