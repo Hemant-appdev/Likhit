@@ -4,22 +4,17 @@ import androidx.lifecycle.viewModelScope
 import com.hbworld.likhit.base.BaseViewModel
 import com.hbworld.likhit.domain.usecase.GetNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailScreenViewModel @Inject constructor(
     private val getNoteUseCase: GetNoteUseCase
-) : BaseViewModel<DetailScreenUiState, DetailScreenUiEvent>() {
+) : BaseViewModel<DetailScreenUiState, DetailScreenUiEvent, DetailScreenUiEffect>() {
 
-    private val _state = MutableStateFlow<DetailScreenUiState>(DetailScreenUiState.Loading)
-    val state: StateFlow<DetailScreenUiState> = _state.asStateFlow()
+    override fun createInitialState() = DetailScreenUiState.Loading
 
-
-    fun onEvent(event: DetailScreenUiEvent) {
+    override fun handleEvent(event: DetailScreenUiEvent) {
         when (event) {
             DetailScreenUiEvent.OnBackClick -> handleOnBackClick()
             DetailScreenUiEvent.OnEditClick -> handleOnEditClick()
@@ -31,9 +26,9 @@ class DetailScreenViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val note = getNoteUseCase.getNoteById(noteId)
-                _state.emit(DetailScreenUiState.Success(note.title, note.description))
+                setState { DetailScreenUiState.Success(note.title, note.description) }
             } catch (e: Exception) {
-                _state.emit(DetailScreenUiState.Error(e.message ?: "Unknown error"))
+                setState { DetailScreenUiState.Error(e.message ?: "Unknown error") }
             }
         }
     }

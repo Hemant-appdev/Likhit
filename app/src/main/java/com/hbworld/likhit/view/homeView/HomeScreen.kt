@@ -31,15 +31,15 @@ fun HomeScreen(
     navigateToAddScreen: () -> Unit,
     navigateToDetailScreen: (Long) -> Unit
 ) {
-    val state = viewModel.state.collectAsStateWithLifecycle()
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
     when (state.value) {
         is HomeScreenUiState.Loading -> {}
         is HomeScreenUiState.Error -> {}
         is HomeScreenUiState.Data -> {
             CreateNoteListUI(
                 state = state.value as HomeScreenUiState.Data,
-                onAddClick = { viewModel.onViewEvent(HomeScreenUiEvent.OnAddNewClick) },
-                onNoteClick = { viewModel.onViewEvent(HomeScreenUiEvent.OnNoteClick(it)) }
+                onAddClick = { viewModel.onEvent(HomeScreenUiEvent.OnAddNewClick) },
+                onNoteClick = { viewModel.onEvent(HomeScreenUiEvent.OnNoteClick(it)) }
             )
         }
     }
@@ -50,7 +50,7 @@ fun HomeScreen(
                     navigateToAddScreen()
                 }
 
-                is HomeScreenUiEffect.NavigateToDetailScreen-> {
+                is HomeScreenUiEffect.NavigateToDetailScreen -> {
                     navigateToDetailScreen(effect.id)
                 }
             }
@@ -83,7 +83,9 @@ fun CreateNoteListUI(
                 .padding(innerPadding)
                 .padding(18.dp)
         ) {
-            items(state.notes.size) {
+            items(
+                count = state.notes.size,
+                key = { index -> state.notes[index].id ?: index }) {
                 NoteCard(
                     note = state.notes[it],
                     onNoteClick = { id ->
@@ -92,10 +94,7 @@ fun CreateNoteListUI(
                 )
             }
         }
-
     }
-
-
 }
 
 @Composable
@@ -125,7 +124,6 @@ fun NoteCard(note: Note, onNoteClick: (Long) -> Unit) {
             )
         }
     }
-
 }
 
 @Composable
