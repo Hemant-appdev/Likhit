@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.Flow
 interface NoteDao {
 
     @Insert
-    suspend fun insert(note: Note): Long
+    suspend fun insert(noteEntity: NoteEntity): Long
 
-    @Query("SELECT * FROM Note")
-    fun getAll(): Flow<List<Note>>
+    @Query("SELECT * FROM NoteEntity")
+    fun getAll(): Flow<List<NoteEntity>>
 
-    @Query("SELECT * FROM NOTE WHERE id = :noteId")
-    suspend fun getNoteById(noteId: Long): Note
+    @Query("SELECT * FROM NoteEntity WHERE id = :noteId")
+    suspend fun getNoteById(noteId: Long): NoteEntity
 }
