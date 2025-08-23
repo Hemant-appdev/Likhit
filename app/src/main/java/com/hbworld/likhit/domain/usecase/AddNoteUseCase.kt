@@ -12,11 +12,8 @@ class AddNoteUseCase @Inject constructor(
             Note(
                 title = title,
                 description = description,
-                updatedAt = System.currentTimeMillis(),
-                id = null
+                updatedAt = System.currentTimeMillis()
             )
         )
     }
-
-
 }

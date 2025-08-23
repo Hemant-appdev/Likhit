@@ -30,7 +30,7 @@ fun AddScreen(
     navigateBack: () -> Unit,
 ) {
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -54,7 +54,7 @@ fun AddScreen(
     AddScreenContent(
         state = state,
         snackBarHostState = snackBarHostState,
-        onEvent = viewModel::onViewEvent
+        onEvent = viewModel::onEvent
     )
 
 

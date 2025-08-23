@@ -6,29 +6,24 @@ import com.hbworld.likhit.base.BaseViewModel
 import com.hbworld.likhit.data.local.Note
 import com.hbworld.likhit.domain.usecase.GetAllNotesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     getAllNotesUseCase: GetAllNotesUseCase
-) : BaseViewModel<HomeScreenUiState, HomeScreenUiEvent>() {
+) : BaseViewModel<HomeScreenUiState, HomeScreenUiEvent, HomeScreenUiEffect>() {
 
-    private val _effect = MutableSharedFlow<HomeScreenUiEffect>()
-    val effect: Flow<HomeScreenUiEffect> = _effect.asSharedFlow()
+    override fun createInitialState() = HomeScreenUiState.Loading
 
-    fun onViewEvent(event: HomeScreenUiEvent) {
+    override fun handleEvent(event: HomeScreenUiEvent) {
         when (event) {
             HomeScreenUiEvent.OnAddNewClick -> handleOnAddNewClick()
             is HomeScreenUiEvent.OnNoteClick -> handleOnNoteClick(event.id)
@@ -36,18 +31,14 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun handleOnNoteClick(id: Long) {
-        viewModelScope.launch {
-            _effect.emit(HomeScreenUiEffect.NavigateToDetailScreen(id))
-        }
+        setEffect { HomeScreenUiEffect.NavigateToDetailScreen(id) }
     }
 
     private fun handleOnAddNewClick() {
-        viewModelScope.launch {
-            _effect.emit(HomeScreenUiEffect.NavigateToAddScreen)
-        }
+        setEffect { HomeScreenUiEffect.NavigateToAddScreen }
     }
 
-    val state: StateFlow<HomeScreenUiState> = getAllNotesUseCase.getAllNotes()
+    override val uiState: StateFlow<HomeScreenUiState> = getAllNotesUseCase.getAllNotes()
         .map<List<Note>, HomeScreenUiState> { notes ->
             HomeScreenUiState.Data(notes)
         }
